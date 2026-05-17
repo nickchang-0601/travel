@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中亞行程規劃 — Nick</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --sand: #f5f0e8;
+    --sand-dark: #e8e0d0;
+    --ink: #1a1714;
+    --ink-light: #4a4540;
+    --gold: #c9a84c;
+    --gold-light: #e8d5a0;
+    --teal: #2d6e6a;
+    --teal-light: #4a9e98;
+    --rust: #c4623a;
+    --mist: #8fa8a6;
+    --cream: #faf8f3;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--sand);
+    color: var(--ink);
+    font-family: 'Noto Serif TC', serif;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 80px 48px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 85% 50%, rgba(201,168,76,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 15% 80%, rgba(45,110,106,0.15) 0%, transparent 50%);
+  }
+  .hero-inner { position: relative; max-width: 880px; margin: 0 auto; }
+  .hero-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 6vw, 64px);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .hero-sub {
+    font-size: 15px;
+    color: rgba(250,248,243,0.55);
+    font-weight: 300;
+    margin-top: 16px;
+  }
+  .hero-dates {
+    margin-top: 36px;
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .hero-date-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .hero-date-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--mist);
+  }
+  .hero-date-val {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--cream);
+  }
+
+  /* ─── LAYOUT ─── */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 32px;
+  }
+
+  /* ─── SECTION TITLE ─── */
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    background: var(--ink);
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+  .section-title h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* ─── FLIGHT CARD ─── */
+  .flight-card {
+    background: var(--cream);
+    border-radius: 12px;
+    border: 1px solid var(--sand-dark);
+    overflow: hidden;
+    margin-bottom: 16px;
+    transition: box-shadow 0.2s;
+  }
+  .flight-card:hover { box-shadow: 0 8px 32px rgba(26,23,20,0.08); }
+
+  .flight-card-header {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .flight-route {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--gold);
+  }
+  .flight-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: rgba(250,248,243,0.5);
+  }
+  .flight-note {
+    font-size: 11px;
+    background: rgba(201,168,76,0.2);
+    color: var(--gold-light);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 20px;
+    padding: 2px 10px;
+    white-space: nowrap;
+  }
+
+  .flight-rows { padding: 8px 0; }
+  .flight-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 90px 100px;
+    align-items: center;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--sand-dark);
+    gap: 12px;
+    transition: background 0.15s;
+  }
+  .flight-row:last-child { border-bottom: none; }
+  .flight-row:hover { background: var(--sand); }
+
+  .airline-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .flight-time-block {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .time-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .time-arrow {
+    color: var(--mist);
+    font-size: 12px;
+  }
+  .duration-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-light);
+    background: var(--sand);
+    border-radius: 4px;
+    padding: 3px 8px;
+    text-align: center;
+  }
+  .price-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--teal);
+    text-align: right;
+  }
+  .price-tag.highlight { color: var(--rust); }
+  .solo-flight {
+    background: linear-gradient(135deg, rgba(45,110,106,0.05), rgba(201,168,76,0.05));
+    border: 1px solid rgba(45,110,106,0.15);
+  }
+  .solo-flight .flight-row {
+    grid-template-columns: 200px 1fr 110px 100px;
+    padding: 20px 24px;
+  }
+  .airline-sub { font-size: 11px; color: var(--mist); margin-top: 2px; }
+
+  /* ─── DIVIDER ─── */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--sand-dark), transparent);
+    margin: 48px 0;
+  }
+
+  /* ─── PRICE TABLE ─── */
+  .price-section { margin-top: 64px; }
+  .price-intro {
+    font-size: 14px;
+    color: var(--ink-light);
+    margin-bottom: 32px;
+    line-height: 1.8;
+    border-left: 3px solid var(--gold);
+    padding-left: 16px;
+  }
+
+  .combo-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--cream);
+    border-radius: 12px;
+    border: 1px solid var(--sand-dark);
+    overflow: hidden;
+    font-size: 13px;
+  }
+  .combo-table thead tr {
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .combo-table thead th {
+    padding: 14px 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 400;
+    text-align: left;
+    color: rgba(250,248,243,0.6);
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+  .combo-table thead th:last-child { border-right: none; }
+  .combo-table tbody tr {
+    border-bottom: 1px solid var(--sand-dark);
+    transition: background 0.15s;
+  }
+  .combo-table tbody tr:last-child { border-bottom: none; }
+  .combo-table tbody tr:hover { background: var(--sand); }
+  .combo-table td {
+    padding: 14px 16px;
+    border-right: 1px solid var(--sand-dark);
+    vertical-align: middle;
+  }
+  .combo-table td:last-child { border-right: none; }
+
+  .seg-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--mist);
+    letter-spacing: 1px;
+  }
+  .seg-val {
+    font-size: 13px;
+    color: var(--ink);
+    margin-top: 2px;
+    font-weight: 400;
+  }
+  .seg-price {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-light);
+  }
+  .total-col {
+    font-family: 'DM Mono', monospace;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--teal);
+    white-space: nowrap;
+  }
+  .total-col.cheapest { color: var(--rust); }
+  .tag-chip {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.5px;
+    border-radius: 20px;
+    padding: 2px 8px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .tag-cheap { background: rgba(196,98,58,0.12); color: var(--rust); border: 1px solid rgba(196,98,58,0.25); }
+  .tag-flex  { background: rgba(45,110,106,0.1); color: var(--teal); border: 1px solid rgba(45,110,106,0.25); }
+  .tag-bkk   { background: rgba(201,168,76,0.12); color: #9a7c2a; border: 1px solid rgba(201,168,76,0.3); }
+
+  .bkk-option-row td { background: rgba(201,168,76,0.04); }
+
+  /* ─── TIPS ─── */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .tip-card {
+    background: var(--cream);
+    border: 1px solid var(--sand-dark);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+  .tip-icon { font-size: 22px; margin-bottom: 10px; }
+  .tip-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .tip-text { font-size: 12px; color: var(--ink-light); line-height: 1.7; }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    text-align: center;
+    padding: 40px 32px;
+    border-top: 1px solid var(--sand-dark);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--mist);
+    letter-spacing: 1px;
+  }
+
+  /* ─── TIMELINE BAR ─── */
+  .timeline {
+    display: flex;
+    align-items: stretch;
+    margin: 40px 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--sand-dark);
+  }
+  .tl-seg {
+    flex: 1;
+    padding: 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-right: 1px solid var(--sand-dark);
+    position: relative;
+  }
+  .tl-seg:last-child { border-right: none; }
+  .tl-seg:nth-child(1) { background: rgba(26,23,20,0.04); }
+  .tl-seg:nth-child(2) { background: rgba(45,110,106,0.06); }
+  .tl-seg:nth-child(3) { background: rgba(201,168,76,0.08); }
+  .tl-seg:nth-child(4) { background: rgba(196,98,58,0.06); }
+  .tl-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--mist);
+  }
+  .tl-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .tl-desc { font-size: 11px; color: var(--ink-light); }
+
+  @media (max-width: 640px) {
+    .hero { padding: 48px 24px 40px; }
+    .container { padding: 40px 20px; }
+    .flight-row { grid-template-columns: 1fr 1fr; }
+    .tips-grid { grid-template-columns: 1fr; }
+    .timeline { flex-direction: column; }
+    .tl-seg { border-right: none; border-bottom: 1px solid var(--sand-dark); }
+    .combo-table { font-size: 11px; }
+    .combo-table td, .combo-table thead th { padding: 10px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">✦ 2025 旅程規劃 · Nick</div>
+    <h1>中亞<br><em>絲路行程</em></h1>
+    <p class="hero-sub">烏茲別克 &nbsp;·&nbsp; 哈薩克 &nbsp;·&nbsp; 途經首爾 &amp; 曼谷</p>
+    <div class="hero-dates">
+      <div class="hero-date-item">
+        <span class="hero-date-label">出發</span>
+        <span class="hero-date-val">10 / 2（四）或 10 / 3（五）</span>
+      </div>
+      <div class="hero-date-item">
+        <span class="hero-date-label">回程</span>
+        <span class="hero-date-val">10 / 11（日）</span>
+      </div>
+      <div class="hero-date-item">
+        <span class="hero-date-label">天數</span>
+        <span class="hero-date-val">約 9 天</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- TIMELINE -->
+  <div class="timeline">
+    <div class="tl-seg">
+      <div class="tl-date">10/2 或 10/3</div>
+      <div class="tl-title">🛫 台北 → 首爾</div>
+      <div class="tl-desc">周四或周五晚班出發</div>
+    </div>
+    <div class="tl-seg">
+      <div class="tl-date">10/3（週六）</div>
+      <div class="tl-title">🛫 首爾 → 塔什干</div>
+      <div class="tl-desc">中午 12:10 出發，抵達烏茲別克</div>
+    </div>
+    <div class="tl-seg">
+      <div class="tl-date">10/11（週日）</div>
+      <div class="tl-title">🛫 阿拉木圖 → 曼谷</div>
+      <div class="tl-desc">凌晨 12:15 出發，早上抵達</div>
+    </div>
+    <div class="tl-seg">
+      <div class="tl-date">10/11（週日）</div>
+      <div class="tl-title">🛫 曼谷 → 台北</div>
+      <div class="tl-desc">快轉 or 玩一整天後傍晚回</div>
+    </div>
+  </div>
+
+  <!-- SEGMENT 1: TPE → ICN -->
+  <div class="section-title">
+    <span class="section-num">01</span>
+    <h2>台北 → 首爾 &nbsp;<small style="font-size:13px;color:var(--mist);font-weight:300;">TPE → ICN｜周四或周五晚</small></h2>
+  </div>
+
+  <div class="flight-card">
+    <div class="flight-card-header">
+      <span class="flight-route">TPE → ICN</span>
+      <span class="flight-note">⬇ 選一即可，10/2 或 10/3 班次相同</span>
+      <span class="flight-date">直飛 · 約 2.5 小時</span>
+    </div>
+    <div class="flight-rows">
+      <div class="flight-row">
+        <div>
+          <div class="airline-name">台灣虎航</div>
+          <div class="airline-sub">Tigerair Taiwan</div>
+        </div>
+        <div class="flight-time-block">
+          <span class="time-text">晚上 20:00</span>
+          <span class="time-arrow">→</span>
+          <span class="time-text">晚上 23:30</span>
+        </div>
+        <div class="duration-badge">2h 30m</div>
+        <div class="price-tag highlight">NT$3,999</div>
+      </div>
+      <div class="flight-row">
+        <div>
+          <div class="airline-name">酷航</div>
+          <div class="airline-sub">Scoot</div>
+        </div>
+        <div class="flight-time-block">
+          <span class="time-text">下午 18:10</span>
+          <span class="time-arrow">→</span>
+          <span class="time-text">晚上 21:45</span>
+        </div>
+        <div class="duration-badge">2h 35m</div>
+        <div class="price-tag">NT$5,036</div>
+      </div>
+      <div class="flight-row">
+        <div>
+          <div class="airline-name">韓亞 · 長榮</div>
+          <div class="airline-sub">Asiana / EVA</div>
+        </div>
+        <div class="flight-time-block">
+          <span class="time-text">下午 16:55</span>
+          <span class="time-arrow">→</span>
+          <span class="time-text">晚上 20:25</span>
+        </div>
+        <div class="duration-badge">2h 30m</div>
+        <div class="price-tag">NT$6,120</div>
+      </div>
+      <div class="flight-row">
+        <div>
+          <div class="airline-name">長榮航空</div>
+          <div class="airline-sub">EVA Air</div>
+        </div>
+        <div class="flight-time-block">
+          <span class="time-text">上午 08:40</span>
+          <span class="time-arrow">→</span>
+          <span class="time-text">中午 12:10</span>
+        </div>
+        <div class="duration-badge">2h 30m</div>
+        <div class="price-tag">NT$6,946</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- SEGMENT 2: ICN → TAS -->
+  <div class="section-title">
+    <span class="section-num">02</span>
+    <h2>首爾 → 塔什干 &nbsp;<small style="font-size:13px;color:var(--mist);font-weight:300;">ICN → TAS｜10/3 週六</small></h2>
+  </div>
+
+  <div class="flight-card solo-flight">
+    <div class="flight-card-header">
+      <span class="flight-route">ICN → TAS</span>
+      <span class="flight-note">✦ 最適合的唯一選擇</span>
+      <span class="flight-date">10/3 · 直飛 · 7h 30m</span>
+    </div>
+    <div class="flight-rows">
+      <div class="flight-row" style="grid-template-columns: 200px 1fr 110px 100px; padding: 20px 24px;">
+        <div>
+          <div class="airline-name">QANOT SHARQ</div>
+          <div class="airline-sub">Airbus A330 · HH 822</div>
+        </div>
+        <div class="flight-time-block">
+          <span class="time-text">中午 12:10</span>
+          <span class="time-arrow">→</span>
+          <span class="time-text">下午 15:40</span>
+        </div>
+        <div class="duration-badge">7h 30m</div>
+        <div class="price-tag">NT$8,138</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- SEGMENT 3: ALA → BKK -->
+  <div class="section-title">
+    <span class="section-num">03</span>
+    <h2>阿拉木圖 → 曼谷 &nbsp;<small style="font-size:13px;color:var(--mist);font-weight:300;">ALA → BKK｜10/11 週日</small></h2>
+  </div>
+
+  <div class="flight-card solo-flight">
+    <div class="flight-card-header">
+      <span class="flight-route">ALA → BKK</span>
+      <span class="flight-note">✦ Air Astana 唯一直飛</span>
+      <span class="flight-date">10/11 · 直飛 · 6h 40m · 過夜班</span>
+    </div>
+    <div class="flight-rows">
+      <div class="flight-row" style="grid-template-columns: 200px 1fr 110px 100px; padding: 20px 24px;">
+        <div>
+          <div class="airline-name">阿斯塔那航空</div>
+          <div class="airline-sub">Air Astana · KC 931 · A321neo</div>
+        </div>
+        <div class="flight-time-block">
+          <span class="time-text">凌晨 00:15</span>
+          <span class="time-arrow">→</span>
+          <span class="time-text">上午 08:55</span>
+        </div>
+        <div class="duration-badge">6h 40m</div>
+        <div class="price-tag">NT$9,721</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- SEGMENT 4: BKK → TPE -->
+  <div class="section-title">
+    <span class="section-num">04</span>
+    <h2>曼谷 → 台北 &nbsp;<small style="font-size:13px;color:var(--mist);font-weight:300;">BKK → TPE｜10/11 · 兩種策略</small></h2>
+  </div>
+
+  <!-- Option A -->
+  <p style="font-size:13px; font-weight:600; color:var(--teal); margin-bottom:12px;">
+    ⚡ 策略 A：快轉回台（抵達曼谷後休息 2 小時）
+  </p>
+  <div class="flight-card">
+    <div class="flight-card-header">
+      <span class="flight-route">BKK → TPE</span>
+      <span class="flight-note">早班 · 抵達後盡快回台</span>
+      <span class="flight-date">直飛 · 約 3.5 小時</span>
+    </div>
+    <div class="flight-rows">
+      <div class="flight-row">
+        <div>
+          <div class="airline-name">中華航空</div>
+          <div class="airline-sub">China Airlines</div>
+        </div>
+        <div class="flight-time-block">
+          <span class="time-text">上午 10:50</span>
+          <span class="time-arrow">→</span>
+          <span class="time-text">下午 15:30</span>
+        </div>
+        <div class="duration-badge">3h 40m</div>
+        <div class="price-tag highlight">NT$6,542</div>
+      </div>
+      <div class="flight-row">
+        <div>
+          <div class="airline-name">星宇航空</div>
+          <div class="airline-sub">Starlux Airlines</div>
+        </div>
+        <div class="flight-time-block">
+          <span class="time-text">下午 13:10</span>
+          <span class="time-arrow">→</span>
+          <span class="time-text">下午 18:00</span>
+        </div>
+        <div class="duration-badge">3h 50m</div>
+        <div class="price-tag">NT$6,557</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <p style="font-size:13px; font-weight:600; color:var(--gold); margin-bottom:12px; margin-top: 28px;">
+    🌆 策略 B：玩曼谷一整天（下午 5:50 班機）
+  </p>
+  <div class="flight-card">
+    <div class="flight-card-header">
+      <span class="flight-route">BKK → TPE</span>
+      <span class="flight-note">晚班 · 白天盡情玩曼谷</span>
+      <span class="flight-date">直飛 · 約 3.5 小時</span>
+    </div>
+    <div class="flight-rows">
+      <div class="flight-row">
+        <div>
+          <div class="airline-name">星宇航空</div>
+          <div class="airline-sub">Starlux Airlines</div>
+        </div>
+        <div class="flight-time-block">
+          <span class="time-text">下午 17:50</span>
+          <span class="time-arrow">→</span>
+          <span class="time-text">晚上 22:40</span>
+        </div>
+        <div class="duration-badge">3h 50m</div>
+        <div class="price-tag highlight">NT$6,557</div>
+      </div>
+      <div class="flight-row">
+        <div>
+          <div class="airline-name">THAI · 長榮</div>
+          <div class="airline-sub">Thai Airways / EVA Air</div>
+        </div>
+        <div class="flight-time-block">
+          <span class="time-text">中午 12:40</span>
+          <span class="time-arrow">→</span>
+          <span class="time-text">下午 17:20</span>
+        </div>
+        <div class="duration-badge">3h 40m</div>
+        <div class="price-tag">NT$7,249</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRICE TABLE -->
+  <div class="price-section">
+    <div class="section-title" style="margin-top: 20px;">
+      <span class="section-num" style="background:var(--teal);">💰</span>
+      <h2>各種組合總價一覽</h2>
+    </div>
+
+    <p class="price-intro">
+      固定費用：首爾 → 塔什干 NT$8,138 ＋ 阿拉木圖 → 曼谷 NT$9,721 = <strong>NT$17,859</strong><br>
+      以下依「去程班次」×「回程策略」列出所有組合。
+    </p>
+
+    <table class="combo-table">
+      <thead>
+        <tr>
+          <th>① 台北→首爾</th>
+          <th>② 首爾→塔什干</th>
+          <th>③ 阿拉木圖→曼谷</th>
+          <th>④ 曼谷→台北</th>
+          <th>總計</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 快轉 combos -->
+        <tr>
+          <td>
+            <div class="seg-label">台灣虎航 · 晚班</div>
+            <div class="seg-val">20:00 → 23:30</div>
+            <div class="seg-price">NT$3,999</div>
+          </td>
+          <td>
+            <div class="seg-label">QANOT SHARQ</div>
+            <div class="seg-val">12:10 → 15:40</div>
+            <div class="seg-price">NT$8,138</div>
+          </td>
+          <td>
+            <div class="seg-label">Air Astana · 過夜</div>
+            <div class="seg-val">00:15 → 08:55</div>
+            <div class="seg-price">NT$9,721</div>
+          </td>
+          <td>
+            <div class="seg-label">中華航空 <span class="tag-chip tag-chip tag-cheap">⚡快轉</span></div>
+            <div class="seg-val">10:50 → 15:30</div>
+            <div class="seg-price">NT$6,542</div>
+          </td>
+          <td class="total-col cheapest">NT$28,400 <span class="tag-chip tag-cheap">最便宜</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="seg-label">台灣虎航 · 晚班</div>
+            <div class="seg-val">20:00 → 23:30</div>
+            <div class="seg-price">NT$3,999</div>
+          </td>
+          <td>
+            <div class="seg-label">QANOT SHARQ</div>
+            <div class="seg-val">12:10 → 15:40</div>
+            <div class="seg-price">NT$8,138</div>
+          </td>
+          <td>
+            <div class="seg-label">Air Astana · 過夜</div>
+            <div class="seg-val">00:15 → 08:55</div>
+            <div class="seg-price">NT$9,721</div>
+          </td>
+          <td>
+            <div class="seg-label">星宇航空 <span class="tag-chip tag-cheap">⚡快轉</span></div>
+            <div class="seg-val">13:10 → 18:00</div>
+            <div class="seg-price">NT$6,557</div>
+          </td>
+          <td class="total-col">NT$28,415</td>
+        </tr>
+        <!-- 玩曼谷 combos -->
+        <tr class="bkk-option-row">
+          <td>
+            <div class="seg-label">台灣虎航 · 晚班</div>
+            <div class="seg-val">20:00 → 23:30</div>
+            <div class="seg-price">NT$3,999</div>
+          </td>
+          <td>
+            <div class="seg-label">QANOT SHARQ</div>
+            <div class="seg-val">12:10 → 15:40</div>
+            <div class="seg-price">NT$8,138</div>
+          </td>
+          <td>
+            <div class="seg-label">Air Astana · 過夜</div>
+            <div class="seg-val">00:15 → 08:55</div>
+            <div class="seg-price">NT$9,721</div>
+          </td>
+          <td>
+            <div class="seg-label">星宇航空 <span class="tag-chip tag-bkk">🌆玩曼谷</span></div>
+            <div class="seg-val">17:50 → 22:40</div>
+            <div class="seg-price">NT$6,557</div>
+          </td>
+          <td class="total-col">NT$28,415</td>
+        </tr>
+        <tr class="bkk-option-row">
+          <td>
+            <div class="seg-label">台灣虎航 · 晚班</div>
+            <div class="seg-val">20:00 → 23:30</div>
+            <div class="seg-price">NT$3,999</div>
+          </td>
+          <td>
+            <div class="seg-label">QANOT SHARQ</div>
+            <div class="seg-val">12:10 → 15:40</div>
+            <div class="seg-price">NT$8,138</div>
+          </td>
+          <td>
+            <div class="seg-label">Air Astana · 過夜</div>
+            <div class="seg-val">00:15 → 08:55</div>
+            <div class="seg-price">NT$9,721</div>
+          </td>
+          <td>
+            <div class="seg-label">THAI · 長榮 <span class="tag-chip tag-bkk">🌆玩曼谷</span></div>
+            <div class="seg-val">12:40 → 17:20</div>
+            <div class="seg-price">NT$7,249</div>
+          </td>
+          <td class="total-col">NT$29,107</td>
+        </tr>
+
+        <!-- 酷航 combos -->
+        <tr>
+          <td>
+            <div class="seg-label">酷航 Scoot</div>
+            <div class="seg-val">18:10 → 21:45</div>
+            <div class="seg-price">NT$5,036</div>
+          </td>
+          <td>
+            <div class="seg-label">QANOT SHARQ</div>
+            <div class="seg-val">12:10 → 15:40</div>
+            <div class="seg-price">NT$8,138</div>
+          </td>
+          <td>
+            <div class="seg-label">Air Astana · 過夜</div>
+            <div class="seg-val">00:15 → 08:55</div>
+            <div class="seg-price">NT$9,721</div>
+          </td>
+          <td>
+            <div class="seg-label">中華航空 <span class="tag-chip tag-cheap">⚡快轉</span></div>
+            <div class="seg-val">10:50 → 15:30</div>
+            <div class="seg-price">NT$6,542</div>
+          </td>
+          <td class="total-col">NT$29,437</td>
+        </tr>
+        <tr class="bkk-option-row">
+          <td>
+            <div class="seg-label">酷航 Scoot</div>
+            <div class="seg-val">18:10 → 21:45</div>
+            <div class="seg-price">NT$5,036</div>
+          </td>
+          <td>
+            <div class="seg-label">QANOT SHARQ</div>
+            <div class="seg-val">12:10 → 15:40</div>
+            <div class="seg-price">NT$8,138</div>
+          </td>
+          <td>
+            <div class="seg-label">Air Astana · 過夜</div>
+            <div class="seg-val">00:15 → 08:55</div>
+            <div class="seg-price">NT$9,721</div>
+          </td>
+          <td>
+            <div class="seg-label">星宇航空 <span class="tag-chip tag-bkk">🌆玩曼谷</span></div>
+            <div class="seg-val">17:50 → 22:40</div>
+            <div class="seg-price">NT$6,557</div>
+          </td>
+          <td class="total-col">NT$29,452</td>
+        </tr>
+
+        <!-- 韓亞長榮 combos -->
+        <tr>
+          <td>
+            <div class="seg-label">韓亞 · 長榮</div>
+            <div class="seg-val">16:55 → 20:25</div>
+            <div class="seg-price">NT$6,120</div>
+          </td>
+          <td>
+            <div class="seg-label">QANOT SHARQ</div>
+            <div class="seg-val">12:10 → 15:40</div>
+            <div class="seg-price">NT$8,138</div>
+          </td>
+          <td>
+            <div class="seg-label">Air Astana · 過夜</div>
+            <div class="seg-val">00:15 → 08:55</div>
+            <div class="seg-price">NT$9,721</div>
+          </td>
+          <td>
+            <div class="seg-label">中華航空 <span class="tag-chip tag-cheap">⚡快轉</span></div>
+            <div class="seg-val">10:50 → 15:30</div>
+            <div class="seg-price">NT$6,542</div>
+          </td>
+          <td class="total-col">NT$30,521</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="seg-label">長榮航空 EVA</div>
+            <div class="seg-val">08:40 → 12:10</div>
+            <div class="seg-price">NT$6,946</div>
+          </td>
+          <td>
+            <div class="seg-label">QANOT SHARQ</div>
+            <div class="seg-val">12:10 → 15:40</div>
+            <div class="seg-price">NT$8,138</div>
+          </td>
+          <td>
+            <div class="seg-label">Air Astana · 過夜</div>
+            <div class="seg-val">00:15 → 08:55</div>
+            <div class="seg-price">NT$9,721</div>
+          </td>
+          <td>
+            <div class="seg-label">中華航空 <span class="tag-chip tag-cheap">⚡快轉</span></div>
+            <div class="seg-val">10:50 → 15:30</div>
+            <div class="seg-price">NT$6,542</div>
+          </td>
+          <td class="total-col">NT$31,347</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Tips -->
+    <div class="tips-grid">
+      <div class="tip-card">
+        <div class="tip-icon">⚡</div>
+        <div class="tip-title">最便宜組合</div>
+        <div class="tip-text">虎航去首爾 + QANOT SHARQ + Air Astana + 中華航空快轉，共約 <strong>NT$28,400</strong>。曼谷到台灣選 10:50 的中華航班，抵達後盡快回台。</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🌆</div>
+        <div class="tip-title">玩曼谷策略</div>
+        <div class="tip-text">Air Astana 早上 08:55 抵達曼谷，如選星宇 17:50 班機，有整整 9 小時可以出去玩，傍晚再回台，只多 NT$15 差不多划算。</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">⏰</div>
+        <div class="tip-title">首爾銜接提醒</div>
+        <div class="tip-text">虎航建議選 10/2（周四）晚班，這樣 10/3 早上可以在首爾逛逛，中午 12:10 再搭 QANOT SHARQ 出發去塔什干，時間最舒適。</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🎫</div>
+        <div class="tip-title">優先搶票建議</div>
+        <div class="tip-text">阿拉木圖 → 曼谷是 Air Astana 唯一直飛，班次有限，建議最優先搶票。首爾 → 塔什干的 QANOT SHARQ 也是特定班次，次優先處理。</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  ✦ &nbsp; NICK'S CENTRAL ASIA ITINERARY · OCT 2025 &nbsp; ✦
+</div>
+
+</body>
+</html>
